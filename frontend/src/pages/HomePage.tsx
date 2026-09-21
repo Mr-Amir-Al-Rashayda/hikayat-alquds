@@ -88,28 +88,30 @@ export const HomePage: React.FC = () => {
               </motion.p>
 
               <motion.div
-                className="flex flex-col items-stretch gap-3 pt-2 sm:flex-row sm:flex-wrap sm:items-center"
+                className="grid grid-cols-2 gap-2 pt-1 sm:flex sm:flex-wrap sm:items-center sm:gap-3 sm:pt-2"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: reduced ? 0 : 0.35 }}
               >
                 <Link
                   to="/plan-tour"
-                  className="min-h-12 w-full justify-center rounded-full bg-brand-olive px-4 py-3 text-center text-[11px] font-serif font-black uppercase tracking-[0.12em] text-brand-bg transition-colors hover:bg-[#4a4a35] inline-flex items-center gap-2 sm:w-auto sm:px-6 sm:text-xs sm:tracking-widest"
+                  className="min-h-11 justify-center rounded-2xl bg-brand-olive px-2 py-2 text-center text-[9px] font-serif font-black uppercase tracking-[0.07em] text-brand-bg transition-colors hover:bg-[#4a4a35] inline-flex items-center gap-1.5 sm:min-h-12 sm:w-auto sm:rounded-full sm:px-6 sm:py-3 sm:text-xs sm:tracking-widest sm:gap-2"
                 >
                   <Route className="w-3.5 h-3.5 text-brand-amber" />
-                  {isArabic ? "صمّم جولتك الذكية في القدس" : "Plan Your Tour"}
+                  <span className="sm:hidden">{isArabic ? "صمّم جولتك" : "Plan your tour"}</span>
+                  <span className="hidden sm:inline">{isArabic ? "صمّم جولتك الذكية في القدس" : "Plan Your Tour"}</span>
                 </Link>
                 <Link
                   to={`/locations/${locations[0]?.id ?? "muslim-quarter"}?ask=1`}
-                  className="min-h-12 w-full justify-center rounded-full bg-brand-amber px-4 py-3 text-center text-[11px] font-serif font-black uppercase tracking-[0.12em] text-white transition-colors hover:bg-[#b45f05] inline-flex items-center gap-2 sm:w-auto sm:px-6 sm:text-xs sm:tracking-widest"
+                  className="min-h-11 justify-center rounded-2xl bg-brand-amber px-2 py-2 text-center text-[9px] font-serif font-black uppercase tracking-[0.07em] text-white transition-colors hover:bg-[#b45f05] inline-flex items-center gap-1.5 sm:min-h-12 sm:w-auto sm:rounded-full sm:px-6 sm:py-3 sm:text-xs sm:tracking-widest sm:gap-2"
                 >
                   <Sparkles className="w-3.5 h-3.5" />
-                  {isArabic ? "اسأل حكاية القدس" : "Ask Hikayat AlQuds"}
+                  <span className="sm:hidden">{isArabic ? "اسأل الدليل" : "Ask the guide"}</span>
+                  <span className="hidden sm:inline">{isArabic ? "اسأل حكاية القدس" : "Ask Hikayat AlQuds"}</span>
                 </Link>
                 <Link
                   to="/contribute"
-                  className="min-h-12 w-full justify-center rounded-full border border-white/45 bg-black/15 px-4 py-3 text-center text-[11px] font-serif font-black uppercase tracking-[0.12em] text-white backdrop-blur-md transition-colors hover:border-brand-amber hover:bg-black/30 inline-flex items-center gap-2 sm:w-auto sm:px-6 sm:text-xs sm:tracking-widest"
+                  className="col-span-2 min-h-10 justify-center rounded-2xl border border-white/45 bg-black/15 px-3 py-2 text-center text-[9px] font-serif font-black uppercase tracking-[0.1em] text-white backdrop-blur-md transition-colors hover:border-brand-amber hover:bg-black/30 inline-flex items-center gap-1.5 sm:min-h-12 sm:w-auto sm:rounded-full sm:px-6 sm:py-3 sm:text-xs sm:tracking-widest sm:gap-2"
                 >
                   <PenLine className="w-3.5 h-3.5" />
                   {isArabic ? "شارك ذكرى" : "Share a memory"}
