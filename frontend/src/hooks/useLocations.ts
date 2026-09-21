@@ -29,10 +29,16 @@ export function useLocations(): LocationsState {
       .then((result) => {
         if (!active) return;
         setState({
-          locations: result.data,
+          // A network intermediary can occasionally return a JSON `null`
+          // with a successful status. Keep the guide renderable while the
+          // request is retried/falls back instead of letting a page read
+          // `locations.length` and crash on first mobile load.
+          locations: Array.isArray(result.data) ? result.data : [],
           loading: false,
           source: result.source,
-          reason: result.reason,
+          reason: Array.isArray(result.data)
+            ? result.reason
+            : result.reason ?? "The location collection returned no usable records.",
         });
       })
       .catch(() => {
