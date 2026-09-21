@@ -1,0 +1,14 @@
+# Hikaya AI module dependencies.
+#
+# NOTHING HERE IS REQUIRED to use the story generation function, the CLI, the
+# tests, or the dependency-free HTTP server (`python3 -m service.server`).
+# The core module runs on a plain Python 3.8+ install.
+
+# --- HTTP service (service/app.py) -------------------------------------------
+fastapi>=0.110
+uvicorn[standard]>=0.27
+
+# --- Language-model backend (service/llm.py) ---------------------------------
+# Only used when ANTHROPIC_API_KEY is set. Without it the module falls back to
+# the offline extractive generator, which never calls out to a network.
+anthropic>=0.40

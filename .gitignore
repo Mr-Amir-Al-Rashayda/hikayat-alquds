@@ -1,0 +1,26 @@
+# Private machine and service configuration
+.env
+.env.*
+!.env.example
+
+# JavaScript dependencies and generated bundles
+node_modules/
+**/node_modules/
+dist/
+**/dist/
+.vite/
+**/.vite/
+
+# Python environments and caches
+.venv/
+**/.venv/
+__pycache__/
+**/__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# OS/editor files and generated archives
+.DS_Store
+.idea/
+.vscode/
+*.zip
