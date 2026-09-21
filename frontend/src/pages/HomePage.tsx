@@ -88,28 +88,28 @@ export const HomePage: React.FC = () => {
               </motion.p>
 
               <motion.div
-                className="flex flex-wrap gap-3 pt-2"
+                className="flex flex-col items-stretch gap-3 pt-2 sm:flex-row sm:flex-wrap sm:items-center"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: reduced ? 0 : 0.35 }}
               >
                 <Link
                   to="/plan-tour"
-                  className="bg-brand-olive hover:bg-[#4a4a35] text-brand-bg text-xs font-serif font-black tracking-widest uppercase px-6 py-3 rounded-full inline-flex items-center gap-2 transition-colors"
+                  className="min-h-12 w-full justify-center rounded-full bg-brand-olive px-4 py-3 text-center text-[11px] font-serif font-black uppercase tracking-[0.12em] text-brand-bg transition-colors hover:bg-[#4a4a35] inline-flex items-center gap-2 sm:w-auto sm:px-6 sm:text-xs sm:tracking-widest"
                 >
                   <Route className="w-3.5 h-3.5 text-brand-amber" />
                   {isArabic ? "صمّم جولتك الذكية في القدس" : "Plan Your Tour"}
                 </Link>
                 <Link
                   to={`/locations/${locations[0]?.id ?? "muslim-quarter"}?ask=1`}
-                  className="bg-brand-amber hover:bg-[#b45f05] text-white text-xs font-serif font-black tracking-widest uppercase px-6 py-3 rounded-full inline-flex items-center gap-2 transition-colors"
+                  className="min-h-12 w-full justify-center rounded-full bg-brand-amber px-4 py-3 text-center text-[11px] font-serif font-black uppercase tracking-[0.12em] text-white transition-colors hover:bg-[#b45f05] inline-flex items-center gap-2 sm:w-auto sm:px-6 sm:text-xs sm:tracking-widest"
                 >
                   <Sparkles className="w-3.5 h-3.5" />
                   {isArabic ? "اسأل حكاية القدس" : "Ask Hikayat AlQuds"}
                 </Link>
                 <Link
                   to="/contribute"
-                  className="border border-white/45 bg-black/15 hover:border-brand-amber hover:bg-black/30 text-white text-xs font-serif font-black tracking-widest uppercase px-6 py-3 rounded-full inline-flex items-center gap-2 backdrop-blur-md transition-colors"
+                  className="min-h-12 w-full justify-center rounded-full border border-white/45 bg-black/15 px-4 py-3 text-center text-[11px] font-serif font-black uppercase tracking-[0.12em] text-white backdrop-blur-md transition-colors hover:border-brand-amber hover:bg-black/30 inline-flex items-center gap-2 sm:w-auto sm:px-6 sm:text-xs sm:tracking-widest"
                 >
                   <PenLine className="w-3.5 h-3.5" />
                   {isArabic ? "شارك ذكرى" : "Share a memory"}
