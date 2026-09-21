@@ -196,8 +196,8 @@ export const JerusalemPulse: React.FC<JerusalemPulseProps> = ({ children }) => {
               </motion.div>
             </AnimatePresence>
 
-            <div className="mt-5 flex items-center justify-between gap-4 border-t border-white/15 pt-4">
-              <div className="flex flex-1 items-center gap-1.5" aria-label={isArabic ? "اختر مشهداً" : "Choose a scene"}>
+            <div className="mt-5 border-t border-white/15 pt-4 sm:flex sm:items-center sm:justify-between sm:gap-4">
+              <div className="flex min-w-0 items-center gap-1.5 overflow-hidden" aria-label={isArabic ? "اختر مشهداً" : "Choose a scene"}>
                 {SCENES.map((scene, index) => (
                   <button
                     type="button"
@@ -211,11 +211,11 @@ export const JerusalemPulse: React.FC<JerusalemPulseProps> = ({ children }) => {
                   />
                 ))}
               </div>
-              <div className="flex items-center gap-2">
+              <div className="mt-3 flex shrink-0 items-center justify-end gap-2 sm:mt-0">
                 <button
                   type="button"
                   onClick={() => move(-1)}
-                  className="flex h-8 w-8 items-center justify-center rounded-full border border-white/25 text-white transition-colors hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-amber"
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/25 text-white transition-colors hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-amber"
                   aria-label={isArabic ? "المشهد السابق" : "Previous scene"}
                 >
                   <ChevronLeft className="h-4 w-4" aria-hidden="true" />
@@ -223,7 +223,7 @@ export const JerusalemPulse: React.FC<JerusalemPulseProps> = ({ children }) => {
                 <button
                   type="button"
                   onClick={() => move(1)}
-                  className="flex h-8 w-8 items-center justify-center rounded-full border border-white/25 text-white transition-colors hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-amber"
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/25 text-white transition-colors hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-amber"
                   aria-label={isArabic ? "المشهد التالي" : "Next scene"}
                 >
                   <ChevronRight className="h-4 w-4" aria-hidden="true" />
