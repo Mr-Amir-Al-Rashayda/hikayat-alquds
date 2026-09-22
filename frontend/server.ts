@@ -15,10 +15,58 @@ const app = express();
 // 5173 by default so the frontend does not collide with the Hikaya backend,
 // which serves the API on 3000.
 const PORT = Number(process.env.PORT ?? 5173);
+const HIKAYA_API_UPSTREAM = (
+  process.env.HIKAYA_API_BASE_URL ?? "http://127.0.0.1:3000/api/v1"
+).replace(/\/+$/, "");
+const API_PROXY_TIMEOUT_MS = 6000;
 
 // Body parser
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
+
+/**
+ * Same-origin API bridge.
+ *
+ * The browser always talks to the host that served the page (`/api/v1`). The
+ * server can safely reach the Nest API over loopback, so phones never need to
+ * know the computer's changing Wi-Fi address and never hit CORS restrictions.
+ */
+app.use("/api/v1", async (req, res) => {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), API_PROXY_TIMEOUT_MS);
+
+  try {
+    const method = req.method.toUpperCase();
+    const hasBody = method !== "GET" && method !== "HEAD" && req.body !== undefined;
+    const upstream = await fetch(`${HIKAYA_API_UPSTREAM}${req.url}`, {
+      method,
+      signal: controller.signal,
+      headers: {
+        accept: req.get("accept") ?? "application/json",
+        "content-type": req.get("content-type") ?? "application/json",
+      },
+      body: hasBody ? JSON.stringify(req.body) : undefined,
+    });
+
+    const contentType = upstream.headers.get("content-type");
+    if (contentType) res.setHeader("Content-Type", contentType);
+    const payload = Buffer.from(await upstream.arrayBuffer());
+    return res.status(upstream.status).send(payload);
+  } catch (error) {
+    const timedOut = error instanceof DOMException && error.name === "AbortError";
+    console.error(
+      `[Hikaya API proxy] ${timedOut ? "upstream timed out" : "upstream unavailable"}:`,
+      error,
+    );
+    return res.status(502).json({
+      message: timedOut
+        ? "The Hikaya API did not respond in time."
+        : "The Hikaya API is temporarily unavailable.",
+    });
+  } finally {
+    clearTimeout(timer);
+  }
+});
 
 interface LegacyContribution {
   id: string;
@@ -89,8 +137,7 @@ app.post("/api/generate-story", async (req, res) => {
       : requestedTone.includes("plain") || requestedTone.includes("neutral")
       ? "neutral"
       : "storytelling";
-    const apiBase = process.env.VITE_API_BASE_URL ?? "http://localhost:3000/api/v1";
-    const response = await fetch(`${apiBase}/ai/generate-story`, {
+    const response = await fetch(`${HIKAYA_API_UPSTREAM}/ai/generate-story`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -137,6 +184,28 @@ interface TtsPayload {
   mimeType: string;
   pcmBase64: string;
   sampleRate: number;
+  timestamps?: WordTimestamp[];
+}
+
+interface WordTimestamp {
+  word: string;
+  start: number;
+  end: number;
+}
+
+interface WordAnnotation {
+  type?: string;
+  text?: string;
+  start_offset?: string;
+  end_offset?: string;
+}
+
+interface TranscriptionInteraction {
+  steps?: Array<{
+    content?: Array<{
+      annotations?: WordAnnotation[];
+    }>;
+  }>;
 }
 
 const TTS_CACHE_TTL_MS = 24 * 60 * 60 * 1000;
@@ -191,6 +260,141 @@ function rememberTts(key: string, payload: TtsPayload) {
       { mode: 0o600 },
     ))
     .catch((error) => console.warn("Could not persist TTS cache:", error));
+}
+
+function offsetSeconds(value: string | undefined) {
+  if (!value) return Number.NaN;
+  return Number.parseFloat(value.replace(/s$/i, ""));
+}
+
+function normalizedWord(value: string) {
+  return value
+    .normalize("NFKD")
+    .toLocaleLowerCase()
+    .replace(/[\u064b-\u065f\u0670]/g, "")
+    .replace(/[إأآٱ]/g, "ا")
+    .replace(/ى/g, "ي")
+    .replace(/[\p{P}\p{S}\p{M}]/gu, "");
+}
+
+/**
+ * Match recognized words back to the displayed tokens. TTS normally recites
+ * them one-for-one; the look-ahead handles punctuation and formatted numbers
+ * without shifting every later highlight.
+ */
+function alignRecognizedWords(text: string, recognized: WordTimestamp[]) {
+  const expected = text.split(/\s+/).filter(Boolean);
+  if (expected.length === 0 || recognized.length === 0) return [];
+
+  if (expected.length === recognized.length) {
+    return expected.map((word, index) => ({ ...recognized[index], word }));
+  }
+
+  const aligned: Array<WordTimestamp | undefined> = new Array(expected.length);
+  let expectedIndex = 0;
+  let recognizedIndex = 0;
+  while (expectedIndex < expected.length && recognizedIndex < recognized.length) {
+    const expectedWord = normalizedWord(expected[expectedIndex]);
+    const spokenWord = normalizedWord(recognized[recognizedIndex].word);
+    if (expectedWord && expectedWord === spokenWord) {
+      aligned[expectedIndex] = { ...recognized[recognizedIndex], word: expected[expectedIndex] };
+      expectedIndex += 1;
+      recognizedIndex += 1;
+      continue;
+    }
+
+    const laterSpoken = recognized.slice(recognizedIndex + 1, recognizedIndex + 7)
+      .findIndex((item) => normalizedWord(item.word) === expectedWord);
+    const laterExpected = expected.slice(expectedIndex + 1, expectedIndex + 7)
+      .findIndex((item) => normalizedWord(item) === spokenWord);
+    if (laterSpoken >= 0 && (laterExpected < 0 || laterSpoken <= laterExpected)) {
+      recognizedIndex += laterSpoken + 1;
+    } else if (laterExpected >= 0) {
+      expectedIndex += laterExpected + 1;
+    } else {
+      aligned[expectedIndex] = { ...recognized[recognizedIndex], word: expected[expectedIndex] };
+      expectedIndex += 1;
+      recognizedIndex += 1;
+    }
+  }
+
+  // Rare unrecognized tokens get only the small interval between neighboring
+  // exact annotations; recognized words retain their actual audio offsets.
+  let cursor = 0;
+  while (cursor < aligned.length) {
+    if (aligned[cursor]) {
+      cursor += 1;
+      continue;
+    }
+    const gapStart = cursor;
+    while (cursor < aligned.length && !aligned[cursor]) cursor += 1;
+    const gapEnd = cursor;
+    const start = gapStart > 0 ? aligned[gapStart - 1]!.end : 0;
+    const end = gapEnd < aligned.length
+      ? aligned[gapEnd]!.start
+      : recognized.at(-1)!.end;
+    const duration = Math.max(0, end - start);
+    const count = gapEnd - gapStart;
+    for (let index = gapStart; index < gapEnd; index += 1) {
+      aligned[index] = {
+        word: expected[index],
+        start: start + (duration * (index - gapStart)) / count,
+        end: start + (duration * (index - gapStart + 1)) / count,
+      };
+    }
+  }
+  return aligned as WordTimestamp[];
+}
+
+async function addWordTimestamps(text: string, payload: TtsPayload, key: string) {
+  if (payload.timestamps?.length) return payload;
+
+  const ai = getAI();
+  const wav = Buffer.from(payload.base64Audio, "base64");
+  const uploaded = await ai.files.upload({
+    file: new Blob([wav], { type: "audio/wav" }),
+    config: { mimeType: "audio/wav", displayName: "hikaya-narration.wav" },
+  });
+
+  try {
+    if (!uploaded.uri) throw new Error("The narration upload did not return a URI.");
+    // The installed SDK's generated types lag the transcription endpoint, so
+    // keep this narrow cast until transcription_config is included upstream.
+    const interaction = await ai.interactions.create({
+      model: "gemini-3.5-transcribe",
+      input: [{ type: "audio", uri: uploaded.uri, mime_type: "audio/wav" }],
+      generation_config: {
+        transcription_config: {
+          mode: { type: "verbatim", timestamp_granularities: ["word"] },
+        },
+      },
+    } as Parameters<typeof ai.interactions.create>[0]) as unknown as TranscriptionInteraction;
+
+    const recognized = (interaction.steps ?? []).flatMap((step) =>
+      (step.content ?? []).flatMap((content) => content.annotations ?? []),
+    ).filter((annotation) => annotation.type === "word_info")
+      .map((annotation) => ({
+        word: annotation.text ?? "",
+        start: offsetSeconds(annotation.start_offset),
+        end: offsetSeconds(annotation.end_offset),
+      }))
+      .filter((timestamp) =>
+        timestamp.word
+        && Number.isFinite(timestamp.start)
+        && Number.isFinite(timestamp.end)
+        && timestamp.end > timestamp.start,
+      );
+
+    const timestamps = alignRecognizedWords(text, recognized);
+    if (timestamps.length === 0) throw new Error("Transcription returned no word timestamps.");
+    const aligned = { ...payload, timestamps };
+    rememberTts(key, aligned);
+    return aligned;
+  } finally {
+    if (uploaded.name) {
+      void ai.files.delete({ name: uploaded.name }).catch(() => undefined);
+    }
+  }
 }
 
 function naturalTtsDirection(text: string) {
@@ -324,7 +528,9 @@ app.post("/api/tts-stream", async (req, res) => {
     const cached = cachedTts(key);
     if (cached) {
       writeEvent({ type: "ready", cache: "HIT" });
-      writeCachedPcm(res, cached, writeEvent);
+      const aligned = await addWordTimestamps(text, cached, key);
+      writeEvent({ type: "timestamps", timestamps: aligned.timestamps });
+      writeCachedPcm(res, aligned, writeEvent);
       writeEvent({ type: "done" });
       return res.end();
     }
@@ -332,13 +538,18 @@ app.post("/api/tts-stream", async (req, res) => {
     const existing = ttsInFlight.get(key);
     if (existing) {
       writeEvent({ type: "ready", cache: "COALESCED" });
-      const payload = await existing;
+      const payload = await addWordTimestamps(text, await existing, key);
+      writeEvent({ type: "timestamps", timestamps: payload.timestamps });
       writeCachedPcm(res, payload, writeEvent);
     } else {
       writeEvent({ type: "ready", cache: "MISS" });
-      await generateNaturalTts(text, selectedVoice, key, (pcm, sampleRate) => {
-        writeEvent({ type: "audio", data: pcm.toString("base64"), sampleRate });
-      });
+      const payload = await addWordTimestamps(
+        text,
+        await generateNaturalTts(text, selectedVoice, key),
+        key,
+      );
+      writeEvent({ type: "timestamps", timestamps: payload.timestamps });
+      writeCachedPcm(res, payload, writeEvent);
     }
     writeEvent({ type: "done" });
     return res.end();
@@ -365,11 +576,15 @@ app.post("/api/tts", async (req, res) => {
     const cached = cachedTts(key);
     if (cached) {
       res.setHeader("X-Hikaya-TTS-Cache", "HIT");
-      return res.json(cached);
+      return res.json(await addWordTimestamps(text, cached, key));
     }
 
     res.setHeader("X-Hikaya-TTS-Cache", ttsInFlight.has(key) ? "COALESCED" : "MISS");
-    return res.json(await generateNaturalTts(text, selectedVoice, key));
+    return res.json(await addWordTimestamps(
+      text,
+      await generateNaturalTts(text, selectedVoice, key),
+      key,
+    ));
   } catch (error: any) {
     console.error("TTS Generation Error:", error);
     const details = ttsErrorDetails(error);

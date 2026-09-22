@@ -116,6 +116,30 @@ textarea {
   font-family: "Thmanyah Serif Display", "Thmanyah Serif Text", serif;
 }
 
+/*
+ * Keep the story dialog scrollable on older iOS Safari versions that do not
+ * understand dynamic viewport units. `vh` is the fallback; browsers with
+ * `dvh` support use the visible viewport instead.
+ */
+.jerusalem-story-dialog {
+  height: calc(100vh - 1.5rem);
+  max-height: calc(100vh - 1.5rem);
+}
+
+@supports (height: 100dvh) {
+  .jerusalem-story-dialog {
+    height: calc(100dvh - 1.5rem);
+    max-height: calc(100dvh - 1.5rem);
+  }
+}
+
+@media (min-width: 640px) {
+  .jerusalem-story-dialog {
+    height: 610px;
+    max-height: calc(100vh - 6rem);
+  }
+}
+
 /* Custom scrollbars matching the Bold Typography theme */
 ::-webkit-scrollbar {
   width: 8px;

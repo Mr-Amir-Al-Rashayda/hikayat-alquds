@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { WordTimestamp } from "../types";
 
 export type NarrationMode = "natural" | "device";
 
@@ -7,11 +8,26 @@ type NaturalAudioError = Error & {
   retryAfterSeconds?: number;
 };
 
+interface NaturalPlaybackSegment {
+  /** AudioContext time at which this PCM chunk starts playing. */
+  contextStart: number;
+  /** Position of this chunk in the contiguous source audio. */
+  audioStart: number;
+  /** Duration of this chunk in source-audio seconds. */
+  audioDuration: number;
+  /** Duration after applying the selected playback rate. */
+  contextDuration: number;
+}
+
 export interface NarrationState {
   supported: boolean;
   speaking: boolean;
   paused: boolean;
   loading: boolean;
+  /** Current position in the source audio, in seconds. */
+  currentTime: number | null;
+  /** Exact word positions returned for the active natural narration. */
+  timestamps: readonly WordTimestamp[];
   voices: SpeechSynthesisVoice[];
   selectedVoice: string;
   setSelectedVoice: (voiceUri: string) => void;
@@ -58,6 +74,8 @@ export function useNarration(language: "ar" | "en" = "ar"): NarrationState {
   const [speaking, setSpeaking] = useState(false);
   const [paused, setPaused] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [currentTime, setCurrentTime] = useState<number | null>(null);
+  const [timestamps, setTimestamps] = useState<WordTimestamp[]>([]);
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [selectedVoice, setSelectedVoiceState] = useState(() => window.localStorage.getItem("hikaya-quds.voice") ?? "");
   const [naturalVoice, setNaturalVoiceState] = useState<"Kore" | "Charon">(() => window.localStorage.getItem("hikaya-quds.natural-voice") === "Charon" ? "Charon" : "Kore");
@@ -77,7 +95,45 @@ export function useNarration(language: "ar" | "en" = "ar"): NarrationState {
   const naturalAbortRef = useRef<AbortController | null>(null);
   const naturalSourcesRef = useRef<Set<AudioBufferSourceNode>>(new Set());
   const naturalFirstPacketTimerRef = useRef<number | null>(null);
+  const naturalPlaybackSegmentsRef = useRef<NaturalPlaybackSegment[]>([]);
+  const naturalPlaybackRateRef = useRef(1);
   const operationRef = useRef(0);
+
+  useEffect(() => {
+    if (!speaking || paused) return;
+
+    let frame = 0;
+    const updatePlaybackTime = () => {
+      const context = audioContextRef.current;
+      const segments = naturalPlaybackSegmentsRef.current;
+      if (context && segments.length > 0) {
+        // Chunks can arrive too late to be scheduled without a gap. Resolve
+        // the position within the actual chunk being played so buffering time
+        // is never mistaken for spoken-audio time.
+        let segmentIndex = segments.length - 1;
+        while (
+          segmentIndex >= 0
+          && segments[segmentIndex].contextStart > context.currentTime
+        ) {
+          segmentIndex -= 1;
+        }
+        if (segmentIndex >= 0) {
+          const segment = segments[segmentIndex];
+          const elapsed = Math.min(
+            segment.contextDuration,
+            context.currentTime - segment.contextStart,
+          );
+          setCurrentTime(
+            segment.audioStart + (elapsed * naturalPlaybackRateRef.current),
+          );
+        }
+      }
+      frame = window.requestAnimationFrame(updatePlaybackTime);
+    };
+
+    frame = window.requestAnimationFrame(updatePlaybackTime);
+    return () => window.cancelAnimationFrame(frame);
+  }, [paused, speaking]);
 
   useEffect(() => {
     if (!deviceSupported) return;
@@ -130,6 +186,8 @@ export function useNarration(language: "ar" | "en" = "ar"): NarrationState {
       URL.revokeObjectURL(audioUrlRef.current);
       audioUrlRef.current = null;
     }
+    naturalPlaybackSegmentsRef.current = [];
+    naturalPlaybackRateRef.current = 1;
   }, []);
 
   const stop = useCallback(() => {
@@ -148,6 +206,8 @@ export function useNarration(language: "ar" | "en" = "ar"): NarrationState {
     setLoading(false);
     setSpeaking(false);
     setPaused(false);
+    setCurrentTime(null);
+    setTimestamps([]);
   }, [deviceSupported, releaseAudio]);
 
   useEffect(() => stop, [stop]);
@@ -174,13 +234,19 @@ export function useNarration(language: "ar" | "en" = "ar"): NarrationState {
       if (operationId !== operationRef.current) return;
       setSpeaking(false);
       setPaused(false);
+      setCurrentTime(null);
       utteranceRef.current = null;
     };
     utterance.onerror = utterance.onend;
+    utterance.onboundary = (event) => {
+      if (operationId !== operationRef.current) return;
+      setCurrentTime(event.elapsedTime);
+    };
     utteranceRef.current = utterance;
     setLoading(false);
     setSpeaking(true);
     setPaused(false);
+    setCurrentTime(0);
     window.speechSynthesis.speak(utterance);
   }, [deviceSupported, language, rate, selectedVoice, voices]);
 
@@ -199,6 +265,7 @@ export function useNarration(language: "ar" | "en" = "ar"): NarrationState {
       setLoading(false);
       setSpeaking(false);
       setPaused(false);
+      setCurrentTime(null);
       releaseAudio();
       const failure = error as NaturalAudioError;
       const timedOut = failure.name === "AbortError";
@@ -212,7 +279,7 @@ export function useNarration(language: "ar" | "en" = "ar"): NarrationState {
             : quotaExceeded
             ? `اكتملت حصة الصوت الطبيعي مؤقتاً. حاول مجدداً بعد نحو ${retryAfter} ثانية، أو اختر صوت الجهاز.`
             : timedOut
-            ? "لم تصل أول دفعة صوت خلال 20 ثانية. تحقق من الاتصال ثم أعد المحاولة، أو اختر صوت الجهاز."
+            ? "لم يكتمل تجهيز الصوت المتزامن خلال 60 ثانية. تحقق من الاتصال ثم أعد المحاولة، أو اختر صوت الجهاز."
             : emptyStream
             ? "انتهى بث الصوت من دون بيانات قابلة للتشغيل. أعد المحاولة أو اختر صوت الجهاز."
             : "الصوت الطبيعي غير متاح الآن. اختر «صوت الجهاز دون اتصال» إن أردت الاستماع فوراً.")
@@ -221,7 +288,7 @@ export function useNarration(language: "ar" | "en" = "ar"): NarrationState {
             : quotaExceeded
             ? `The natural-voice rate limit is temporarily exhausted. Retry in about ${retryAfter} seconds, or choose the device voice.`
             : timedOut
-            ? "No audio arrived within 20 seconds. Check the connection and retry, or choose the device voice."
+            ? "Synchronized audio was not ready within 60 seconds. Check the connection and retry, or choose the device voice."
             : emptyStream
             ? "The voice stream ended without playable audio. Retry or choose the device voice."
             : "Natural audio is unavailable right now. Choose “Offline device voice” for immediate playback."));
@@ -243,7 +310,7 @@ export function useNarration(language: "ar" | "en" = "ar"): NarrationState {
     const controller = new AbortController();
     audioContextRef.current = context;
     naturalAbortRef.current = controller;
-    naturalFirstPacketTimerRef.current = window.setTimeout(() => controller.abort(), 20_000);
+    naturalFirstPacketTimerRef.current = window.setTimeout(() => controller.abort(), 60_000);
     void context.resume().catch(() => undefined);
 
     void (async () => {
@@ -253,6 +320,7 @@ export function useNarration(language: "ar" | "en" = "ar"): NarrationState {
       let scheduledUntil = 0;
       let completed = false;
       const playbackRate = Math.min(1.05, Math.max(0.8, rate / 0.9));
+      naturalPlaybackRateRef.current = playbackRate;
 
       const finishPlayback = () => {
         if (completed || operationId !== operationRef.current) return;
@@ -261,6 +329,7 @@ export function useNarration(language: "ar" | "en" = "ar"): NarrationState {
         setLoading(false);
         setSpeaking(false);
         setPaused(false);
+        setCurrentTime(null);
       };
 
       const schedulePcm = (base64: string, sampleRate: number) => {
@@ -282,6 +351,15 @@ export function useNarration(language: "ar" | "en" = "ar"): NarrationState {
         source.playbackRate.value = playbackRate;
         source.connect(context.destination);
         const startAt = Math.max(scheduledUntil, context.currentTime + 0.08);
+        const previousSegment = naturalPlaybackSegmentsRef.current.at(-1);
+        naturalPlaybackSegmentsRef.current.push({
+          contextStart: startAt,
+          audioStart: previousSegment
+            ? previousSegment.audioStart + previousSegment.audioDuration
+            : 0,
+          audioDuration: buffer.duration,
+          contextDuration: buffer.duration / playbackRate,
+        });
         if (!receivedAudio) {
           receivedAudio = true;
           if (naturalFirstPacketTimerRef.current !== null) {
@@ -291,6 +369,7 @@ export function useNarration(language: "ar" | "en" = "ar"): NarrationState {
           setLoading(false);
           setSpeaking(true);
           setPaused(false);
+          setCurrentTime(null);
         }
         scheduledUntil = startAt + (buffer.duration / playbackRate);
         naturalSourcesRef.current.add(source);
@@ -303,6 +382,20 @@ export function useNarration(language: "ar" | "en" = "ar"): NarrationState {
       };
 
       const handleEvent = (event: Record<string, unknown>) => {
+        if (event.type === "timestamps" && Array.isArray(event.timestamps)) {
+          const next = event.timestamps.filter((item): item is WordTimestamp => {
+            if (!item || typeof item !== "object") return false;
+            const value = item as Record<string, unknown>;
+            return typeof value.word === "string"
+              && typeof value.start === "number"
+              && typeof value.end === "number"
+              && Number.isFinite(value.start)
+              && Number.isFinite(value.end)
+              && value.end > value.start;
+          });
+          setTimestamps(next);
+          return;
+        }
         if (event.type === "audio" && typeof event.data === "string") {
           schedulePcm(event.data, typeof event.sampleRate === "number" ? event.sampleRate : 24000);
           return;
@@ -394,8 +487,8 @@ export function useNarration(language: "ar" | "en" = "ar"): NarrationState {
   }, [stop]);
 
   return useMemo(() => ({
-    supported, speaking, paused, loading, voices, selectedVoice,
+    supported, speaking, paused, loading, currentTime, timestamps, voices, selectedVoice,
     setSelectedVoice, naturalVoice, setNaturalVoice, rate, setRate, mode, setMode,
     notice, speak, pause, resume, stop,
-  }), [supported, speaking, paused, loading, voices, selectedVoice, setSelectedVoice, naturalVoice, setNaturalVoice, rate, setRate, mode, setMode, notice, speak, pause, resume, stop]);
+  }), [supported, speaking, paused, loading, currentTime, timestamps, voices, selectedVoice, setSelectedVoice, naturalVoice, setNaturalVoice, rate, setRate, mode, setMode, notice, speak, pause, resume, stop]);
 }

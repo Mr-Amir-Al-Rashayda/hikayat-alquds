@@ -4,9 +4,14 @@ import { Pause, Play, SlidersHorizontal, Sparkles, Square, Volume2 } from "lucid
 import { useNarration } from "../hooks/useNarration";
 import { markAudioListened } from "../services/progress";
 import { useInterfaceLanguage } from "../context/LanguageContext";
+import type { WordTimestamp } from "../types";
 
-interface NarrativeReaderProps {
+export type { WordTimestamp } from "../types";
+
+export interface NarrativeReaderProps {
   text: string;
+  /** Word-level positions in the narration audio, in reading order. */
+  timestamps?: readonly WordTimestamp[];
   /** Reveal the text word by word, as if it were being written. */
   typing?: boolean;
   /** Offer the read-aloud controls. */
@@ -14,6 +19,35 @@ interface NarrativeReaderProps {
   /** Start reading aloud as soon as the text arrives (used by the walking tour). */
   autoPlay?: boolean;
   locationId?: string;
+}
+
+/** Returns the word being spoken at `currentTime`, or -1 during a gap. */
+export function findActiveWordIndex(
+  timestamps: readonly WordTimestamp[],
+  currentTime: number | null,
+) {
+  if (currentTime === null || !Number.isFinite(currentTime) || currentTime < 0) {
+    return -1;
+  }
+
+  // Timestamp arrays are ordered, so a binary search avoids scanning the
+  // whole story on every animation frame.
+  let low = 0;
+  let high = timestamps.length - 1;
+  let candidate = -1;
+  while (low <= high) {
+    const middle = Math.floor((low + high) / 2);
+    if (timestamps[middle].start <= currentTime) {
+      candidate = middle;
+      low = middle + 1;
+    } else {
+      high = middle - 1;
+    }
+  }
+
+  if (candidate === -1) return -1;
+  const timestamp = timestamps[candidate];
+  return currentTime < timestamp.end ? candidate : -1;
 }
 
 /** Splits a narrative into paragraphs for the optional typewriter reveal. */
@@ -37,12 +71,12 @@ function tokenise(text: string) {
 
 /**
  * Displays a narrative, optionally revealing it as it is "written", with
- * independent read-aloud controls. Narration intentionally does not attempt
- * word-level highlighting: generated voices do not expose reliable word
- * timestamps, and an approximate tracker is more distracting than useful.
+ * independent read-aloud controls. When exact word timestamps are supplied,
+ * highlighting follows the audio playback clock rather than a flat timer.
  */
 export const NarrativeReader: React.FC<NarrativeReaderProps> = ({
   text,
+  timestamps = [],
   typing = false,
   narration = true,
   autoPlay = false,
@@ -55,6 +89,15 @@ export const NarrativeReader: React.FC<NarrativeReaderProps> = ({
   const totalWords = useMemo(
     () => text.split(/\s+/).filter(Boolean).length,
     [text],
+  );
+  const activeWordIndex = useMemo(
+    () => speech.speaking
+      ? findActiveWordIndex(
+          speech.timestamps.length > 0 ? speech.timestamps : timestamps,
+          speech.currentTime,
+        )
+      : -1,
+    [speech.currentTime, speech.speaking, speech.timestamps, timestamps],
   );
 
   const [typedCount, setTypedCount] = useState(() =>
@@ -255,7 +298,19 @@ export const NarrativeReader: React.FC<NarrativeReaderProps> = ({
                     return <React.Fragment key={entryIndex}>{entry.token}</React.Fragment>;
                   }
                   if (entry.index >= typedCount) return null;
-                  return <React.Fragment key={entryIndex}>{entry.token}</React.Fragment>;
+                  const active = entry.index === activeWordIndex;
+                  return (
+                    <span
+                      key={entryIndex}
+                      data-word-index={entry.index}
+                      data-active={active || undefined}
+                      className={active
+                        ? "rounded bg-brand-amber/25 text-brand-olive ring-1 ring-brand-amber/30 transition-colors duration-75"
+                        : undefined}
+                    >
+                      {entry.token}
+                    </span>
+                  );
                 })}
               </React.Fragment>
             ))}

@@ -46,6 +46,15 @@ export interface ApiStory {
   isAiGenerated: boolean;
   uncertaintyNotes: string[];
   status: string;
+  /** Optional forced-alignment data for synchronized narration highlighting. */
+  timestamps?: WordTimestamp[];
+}
+
+/** A word's exact position in its narration audio. */
+export interface WordTimestamp {
+  word: string;
+  start: number;
+  end: number;
 }
 
 export interface ApiContribution {
@@ -141,6 +150,8 @@ export interface GeneratedStory {
   language: string;
   tone: string;
   wordCount: number;
+  /** Optional forced-alignment data for synchronized narration highlighting. */
+  timestamps?: WordTimestamp[];
   /** Gaps the AI declined to fill. Shown to the reader as a footnote. */
   uncertaintyNotes: string[];
   /** Fact-guard findings. Shown only as a review flag, never as content. */
@@ -302,8 +313,19 @@ export interface MyJerusalemStory {
   oralMemoriesUncovered: number;
   totalWalkingMinutes: number;
   heritageSitesDiscovered: number;
+  personalPhotosCaptured: number;
+  personalMemoriesWritten: number;
   badge: string;
   reflection: string;
+}
+
+/** A private journey memory stored only in this browser. */
+export interface UserJourneyMemory {
+  id: string;
+  photoDataUrl: string;
+  locationTag: string;
+  note: string;
+  createdAt: string;
 }
 
 export interface Contribution {

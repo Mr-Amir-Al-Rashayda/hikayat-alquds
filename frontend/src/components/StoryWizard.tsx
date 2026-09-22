@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import { ApiLocation, AudienceMode, GeneratedStory, StoryTone } from "../types";
 import { generateStory } from "../services/api";
-import { NarrativeReader } from "./NarrativeReader";
+import { StoryNarrator } from "./StoryNarrator";
 import { TransparencyPanel } from "./TransparencyPanel";
 import { SourceCitationLine } from "./SourceCitationLine";
 import { useInterfaceLanguage } from "../context/LanguageContext";
@@ -127,6 +127,7 @@ export const StoryWizard: React.FC<StoryWizardProps> = ({ location, autoPlay }) 
           title: profile.arabicStoryTitle,
           summary: profile.arabicSummary,
           narrative,
+          timestamps: undefined,
           language: "ar",
           wordCount: narrative.split(/\s+/).filter(Boolean).length,
           uncertaintyNotes: ["صياغة عربية استخراجية من ملف المكان المراجع؛ لم تُضف حقائق من خارج السجل."],
@@ -309,7 +310,13 @@ export const StoryWizard: React.FC<StoryWizardProps> = ({ location, autoPlay }) 
                     </p>
                   </div>
 
-                  <NarrativeReader text={story.narrative} typing autoPlay={autoPlay} locationId={location.id} />
+                  <StoryNarrator
+                    text={story.narrative}
+                    timestamps={story.timestamps}
+                    typing
+                    autoPlay={autoPlay}
+                    locationId={location.id}
+                  />
 
                   {story.warnings.length > 0 && (
                     <div className="bg-red-50 border border-red-200 rounded-2xl p-4 space-y-1.5">

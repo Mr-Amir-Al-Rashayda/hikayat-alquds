@@ -47,7 +47,7 @@ import { BeforeAfterSlider } from "../components/BeforeAfterSlider";
 import { StoryWizard } from "../components/StoryWizard";
 import { HeritageChat } from "../components/HeritageChat";
 import { HeritageQuiz } from "../components/HeritageQuiz";
-import { NarrativeReader } from "../components/NarrativeReader";
+import { StoryNarrator } from "../components/StoryNarrator";
 import { LocationCard } from "../components/LocationCard";
 import { LoadingRegion, SkeletonLine, SkeletonText } from "../components/Skeleton";
 import { PageTransition, Reveal } from "../components/motion";
@@ -375,8 +375,14 @@ export const LocationDetailsPage: React.FC = () => {
                         {isArabic ? (profile?.arabicSummary ?? story.summary) : (profile?.summary ?? story.summary)}
                       </p>
                     )}
-                    <NarrativeReader
+                    <StoryNarrator
                       text={reviewedWalkthrough ?? (isArabic ? (profile?.arabicStory ?? story.simplifiedStory) : (profile?.story ?? story.simplifiedStory))}
+                      timestamps={
+                        !reviewedWalkthrough
+                        && (isArabic ? !profile?.arabicStory : !profile?.story)
+                          ? story.timestamps
+                          : undefined
+                      }
                       autoPlay={walkingTour}
                       locationId={location.id}
                     />

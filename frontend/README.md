@@ -21,9 +21,10 @@ npm install
 cp .env.example .env
 ```
 
-Nothing in `.env` is required. Without it the app points at
-`http://localhost:3000/api/v1` and falls back to bundled sample data if that is not
-running.
+Nothing in `.env` is required. The browser uses the same-origin `/api/v1`
+bridge; the frontend server forwards it to `http://127.0.0.1:3000/api/v1` by
+default and falls back to bundled sample data if the backend is not running.
+Override the server-side destination with `HIKAYA_API_BASE_URL` when needed.
 
 ## Run
 
@@ -131,7 +132,8 @@ frontend/src/
 │   ├── Gallery.tsx             # lightbox, keyboard control, per-image credit
 │   ├── BeforeAfterSlider.tsx   # only where a real pair exists
 │   ├── StoryWizard.tsx         # Audience -> Style -> Generate
-│   ├── NarrativeReader.tsx     # typing reveal + natural/device read-aloud controls
+│   ├── NarrativeReader.tsx     # timestamp-synced text + read-aloud controls
+│   ├── StoryNarrator.tsx       # story-facing synchronized reader adapter
 │   ├── TransparencyPanel.tsx   # public bibliography, generator and documented gaps
 │   ├── HeritageChat.tsx        # per-location guide, with the "we don't know" invitation
 │   ├── HeritageQuiz.tsx        # questions that cite their sources

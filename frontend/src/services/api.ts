@@ -44,7 +44,7 @@ import { locationById } from "../locationsData";
 
 const BASE_URL: string =
   (import.meta.env?.VITE_API_BASE_URL as string | undefined) ??
-  "http://localhost:3000/api/v1";
+  "/api/v1";
 
 const REQUEST_TIMEOUT_MS = 8000;
 /** Story generation is slower than a normal read. */
@@ -65,6 +65,48 @@ export class ApiError extends Error {
     super(message);
     this.name = "ApiError";
   }
+}
+
+interface ReadCache<T> {
+  value?: ApiResult<T>;
+  expiresAt: number;
+  inFlight?: Promise<ApiResult<T>>;
+}
+
+const LOCATIONS_CACHE_MS = 5 * 60 * 1000;
+const FEATURED_STORY_CACHE_MS = 60 * 1000;
+const FALLBACK_CACHE_MS = 5 * 1000;
+
+const locationsCache: ReadCache<ApiLocation[]> = { expiresAt: 0 };
+const featuredStoryCache: ReadCache<FeaturedStory> = { expiresAt: 0 };
+
+/**
+ * Reuses both completed reads and an already-running read. This prevents every
+ * route that calls `useLocations()` from starting a new request and flashing a
+ * fresh skeleton while the same data is already available elsewhere.
+ */
+function cachedRead<T>(
+  cache: ReadCache<T>,
+  load: () => Promise<ApiResult<T>>,
+  ttlMs: number,
+): Promise<ApiResult<T>> {
+  if (cache.value && Date.now() < cache.expiresAt) {
+    return Promise.resolve(cache.value);
+  }
+  if (cache.inFlight) return cache.inFlight;
+
+  cache.inFlight = load()
+    .then((result) => {
+      cache.value = result;
+      cache.expiresAt =
+        Date.now() + (result.source === "backend" ? ttlMs : FALLBACK_CACHE_MS);
+      return result;
+    })
+    .finally(() => {
+      cache.inFlight = undefined;
+    });
+
+  return cache.inFlight;
 }
 
 async function request<T>(
@@ -128,9 +170,14 @@ async function withFallback<T>(
 // --- Locations ---------------------------------------------------------------
 
 export function getLocations(): Promise<ApiResult<ApiLocation[]>> {
-  return withFallback(
-    () => request<ApiLocation[]>("/locations"),
-    () => MOCK_LOCATIONS,
+  return cachedRead(
+    locationsCache,
+    () =>
+      withFallback(
+        () => request<ApiLocation[]>("/locations"),
+        () => MOCK_LOCATIONS,
+      ),
+    LOCATIONS_CACHE_MS,
   );
 }
 
@@ -222,18 +269,23 @@ export function getStories(locationId: string): Promise<ApiResult<ApiStory[]>> {
 
 /** The story of the day - the same one for everybody, changing daily. */
 export function getFeaturedStory(): Promise<ApiResult<FeaturedStory>> {
-  return withFallback(
-    () => request<FeaturedStory>("/stories/featured"),
-    () => {
-      const index = Math.floor(Date.now() / 86_400_000) % MOCK_STORIES.length;
-      const story = MOCK_STORIES[index];
-      return {
-        story,
-        location: MOCK_LOCATIONS.find((item) => item.id === story.locationId) ?? null,
-        reason: "daily-rotation" as const,
-        forDate: new Date().toISOString().slice(0, 10),
-      };
-    },
+  return cachedRead(
+    featuredStoryCache,
+    () =>
+      withFallback(
+        () => request<FeaturedStory>("/stories/featured"),
+        () => {
+          const index = Math.floor(Date.now() / 86_400_000) % MOCK_STORIES.length;
+          const story = MOCK_STORIES[index];
+          return {
+            story,
+            location: MOCK_LOCATIONS.find((item) => item.id === story.locationId) ?? null,
+            reason: "daily-rotation" as const,
+            forDate: new Date().toISOString().slice(0, 10),
+          };
+        },
+      ),
+    FEATURED_STORY_CACHE_MS,
   );
 }
 
