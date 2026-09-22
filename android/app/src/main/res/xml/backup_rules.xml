@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The reader's settings and their private journey are worth restoring to a new
+  phone. Nothing else is.
+
+  Because this lists what to include, everything not named here - the content
+  database above all - is already left out. The database is deliberately not
+  backed up: it is rebuilt from the assets bundled in whatever version of the
+  app is installed, so restoring an old copy could only put a stale archive on
+  a new phone.
+-->
+<full-backup-content>
+    <include domain="sharedpref" path="." />
+    <include domain="file" path="datastore/" />
+</full-backup-content>

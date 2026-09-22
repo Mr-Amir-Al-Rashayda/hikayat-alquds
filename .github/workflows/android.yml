@@ -1,0 +1,158 @@
+name: Android
+
+# The app ships the whole reviewed archive inside the APK, so CI checks the
+# things that would break that promise: the assets still regenerate from the
+# reviewed sources, the archive still loads through the real Room schema, and
+# the release build still shrinks without stripping the data layer.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'android/**'
+      - 'frontend/src/**'
+      - 'content/**'
+      - '.github/workflows/android.yml'
+  pull_request:
+    paths:
+      - 'android/**'
+      - 'frontend/src/**'
+      - 'content/**'
+  workflow_dispatch:
+
+concurrency:
+  group: android-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  assets:
+    name: Assets regenerate from the reviewed sources
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install asset tooling
+        run: pip install fonttools brotli pillow
+
+      - name: Regenerate the bundled JSON
+        working-directory: android
+        run: |
+          npx --yes esbuild tools/export-assets.ts --bundle --platform=node \
+            --format=esm --packages=external --outfile=tools/.export.mjs
+          node tools/.export.mjs
+
+      - name: Regenerate the bundled media
+        run: python android/tools/prepare_media.py
+
+      # A committed asset that no longer matches the reviewed content means the
+      # app and the website have drifted apart.
+      - name: Fail if the committed assets are stale
+        run: |
+          git diff --stat -- android/app/src/main/assets android/app/src/main/res/font
+          git diff --quiet -- android/app/src/main/assets/content \
+            || { echo "::error::Bundled content is stale. Re-run the export and commit."; exit 1; }
+
+  build:
+    name: Build, lint and test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      # Kotlin nests block comments, so a KDoc containing a glob silently
+      # swallows the declaration under it. Cheap to check, baffling to debug.
+      - name: Check for nested block comments
+        run: python android/tools/check_nested_comments.py
+
+      - name: Unit tests
+        working-directory: android
+        run: ./gradlew testDebugUnitTest --no-daemon
+
+      - name: Android Lint
+        working-directory: android
+        run: ./gradlew lintDebug --no-daemon
+
+      - name: Assemble debug
+        working-directory: android
+        run: ./gradlew assembleDebug --no-daemon
+
+      # Proves the R8 rules keep the data layer intact; a release build that
+      # shrinks away the serializers fails here rather than on a phone.
+      - name: Assemble release
+        working-directory: android
+        run: ./gradlew assembleRelease --no-daemon
+
+      - name: Upload APKs
+        uses: actions/upload-artifact@v4
+        with:
+          name: hikayat-alquds-apks
+          path: |
+            android/app/build/outputs/apk/debug/*.apk
+            android/app/build/outputs/apk/release/*.apk
+          if-no-files-found: error
+
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reports
+          path: |
+            android/app/build/reports/**
+            android/app/build/test-results/**
+
+  instrumented:
+    name: Instrumented tests on an emulator
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' \
+            | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Run the Jerusalem journey on a device
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          target: aosp_atd
+          arch: x86_64
+          profile: pixel_6
+          # The archive must be readable with the radio off; this is the test
+          # that proves it on a real framework.
+          emulator-options: -no-window -gpu swiftshader_indirect -no-audio -no-boot-anim -no-snapshot
+          disable-animations: true
+          working-directory: android
+          script: ./gradlew connectedDebugAndroidTest --no-daemon
+
+      - name: Upload instrumentation reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: instrumented-reports
+          path: android/app/build/reports/androidTests/**

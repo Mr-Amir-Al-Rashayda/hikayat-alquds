@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      The one colour the framework needs before Compose starts: the window
+      background behind the splash. Everything else is a Compose token in
+      core/designsystem/Color.kt.
+    -->
+    <color name="brand_background">#F5F5F0</color>
+</resources>

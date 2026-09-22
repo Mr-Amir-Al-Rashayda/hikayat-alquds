@@ -52,6 +52,19 @@ psql -d hikaya -f database/seed-generated.sql
 echo 'DATABASE_URL=postgresql://user:password@localhost:5432/hikaya' >> backend/.env
 ```
 
+### Android
+
+```bash
+cd android
+./gradlew installDebug
+```
+
+Nothing else to configure: the complete reviewed archive - every place, story,
+timeline, quiz and 34 photographs - ships inside the APK, so the app is fully
+readable with no backend and no connection. Point it at a running API from
+Settings when you want live contributions and server-side generation.
+See [`android/README.md`](android/README.md).
+
 Full setup and troubleshooting: [`docs/integration-guide.md`](docs/integration-guide.md).
 
 ---
@@ -61,6 +74,7 @@ Full setup and troubleshooting: [`docs/integration-guide.md`](docs/integration-g
 | Folder | Contents |
 |---|---|
 | [`frontend/`](frontend/) | React + Vite web interface |
+| [`android/`](android/) | Native Android app (Kotlin + Jetpack Compose), offline-first |
 | [`backend/`](backend/) | NestJS REST API |
 | [`database/`](database/) | PostgreSQL schema and seed data |
 | [`ai/`](ai/) | Story generation module and the backend JSON contract |
@@ -99,6 +113,7 @@ Each folder has its own README.
 | Layer | Choice |
 |---|---|
 | Frontend | React 19, Vite 6, React Router 7, Tailwind CSS 4 |
+| Android | Kotlin 2.2, Jetpack Compose (Material 3), Room, Hilt, Retrofit, WorkManager |
 | Backend | NestJS 11 (TypeScript), `pg` |
 | Database | PostgreSQL 13+ |
 | AI module | Python 3.8+, FastAPI-compatible HTTP service, offline extractive fallback |

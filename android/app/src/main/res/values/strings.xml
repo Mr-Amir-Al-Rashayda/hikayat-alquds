@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  English interface strings.
+
+  Reviewed *content* - the stories, timelines, quiz questions and memories -
+  is not here: it lives in the archive with its Arabic and English written
+  separately, both reviewed. This file is only the app's own chrome.
+-->
+<resources>
+    <string name="app_name">Hikayat AlQuds</string>
+    <string name="app_tagline">The intelligent digital guide to Jerusalem</string>
+    <string name="brand_lockup">HIKAYAT ALQUDS · حكاية القدس</string>
+    <string name="track_badge">Q GUIDE 2026</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_map">Map</string>
+    <string name="nav_plan">Plan tour</string>
+    <string name="nav_connections">Connections</string>
+    <string name="nav_contribute">Contribute</string>
+    <string name="nav_about">About</string>
+    <string name="nav_settings">Settings</string>
+    <string name="nav_search">Search</string>
+
+    <!-- Home -->
+    <string name="home_greeting">Jerusalem, told from its own records</string>
+    <string name="home_intro">Eight quarters, gates and neighbourhoods, each built only from reviewed content. Where the record has a gap, this guide says so instead of filling it.</string>
+    <string name="home_story_of_the_day">Story of the day</string>
+    <string name="home_another_story">Another story</string>
+    <string name="home_all_places">All places</string>
+    <string name="home_continue">Continue where you left off</string>
+    <string name="home_plan_cta">Design your walk</string>
+    <string name="home_keepsake_cta">Generate My Jerusalem Story</string>
+    <string name="home_progress_title">Your journey</string>
+    <string name="home_progress_subtitle">%1$d of %2$d places opened</string>
+    <string name="home_bookmarks">Saved places</string>
+
+    <!-- Location card / detail -->
+    <string name="stat_stories">stories</string>
+    <string name="stat_photographs">photographs</string>
+    <string name="stat_timeline">timeline entries</string>
+    <string name="stat_memories">memories</string>
+    <string name="stat_reading_time">%1$d min read</string>
+    <string name="label_visited">Opened</string>
+    <string name="action_save">Save</string>
+    <string name="action_unsave">Saved</string>
+    <string name="action_open_in_maps">Walking directions</string>
+    <string name="action_share">Share</string>
+    <string name="action_close">Close</string>
+    <string name="action_back">Back</string>
+    <string name="action_next">Next</string>
+
+    <!-- Detail tabs -->
+    <string name="tab_story">Story</string>
+    <string name="tab_guide">Guide</string>
+    <string name="tab_timeline">Timeline</string>
+    <string name="tab_gallery">Gallery</string>
+    <string name="tab_artisans">Artisans</string>
+    <string name="tab_quiz">Quiz</string>
+    <string name="tab_memories">Memories</string>
+
+    <!-- Story + generation -->
+    <string name="story_reviewed">Reviewed story</string>
+    <string name="story_generate_title">Retell this place</string>
+    <string name="story_generate_step_audience">1. Who is it for?</string>
+    <string name="story_generate_step_tone">2. How should it sound?</string>
+    <string name="story_generate_action">Generate</string>
+    <string name="story_regenerate">Generate again</string>
+    <string name="story_word_count">%1$d words</string>
+    <string name="audience_student">Student</string>
+    <string name="audience_tourist">Visitor</string>
+    <string name="audience_child">Child</string>
+    <string name="audience_short">Two minutes</string>
+    <string name="audience_historian">Historian</string>
+    <string name="audience_general">General</string>
+    <string name="tone_neutral">Neutral</string>
+    <string name="tone_educational">Educational</string>
+    <string name="tone_emotional">Reflective</string>
+    <string name="tone_storytelling">Storytelling</string>
+
+    <!-- Provenance and honesty -->
+    <string name="origin_label">Written by</string>
+    <string name="origin_backend_ai">the reviewed-content model on the server</string>
+    <string name="origin_offline_extractive">the server\'s offline extractive generator</string>
+    <string name="origin_backend_fallback">the server\'s stored description</string>
+    <string name="origin_on_device">this device, from the stored reviewed record</string>
+    <string name="uncertainty_title">What this does not claim</string>
+    <string name="sources_title">Where this comes from</string>
+    <string name="tradition_badge">Oral or religious tradition</string>
+    <string name="tradition_note">Recorded as tradition and attributed as such, not as documented history.</string>
+    <string name="banner_bundled_title">Showing the archive as it shipped</string>
+    <string name="banner_bundled_body">This is the complete reviewed archive, bundled in the app. Newly contributed memories and server-generated stories need a connection.</string>
+    <string name="banner_live_title">Connected to the Hikayat AlQuds API</string>
+    <string name="banner_live_body">Last refreshed %1$s.</string>
+    <string name="banner_offline">No connection — reading from the bundled archive.</string>
+
+    <!-- Guide chat -->
+    <string name="guide_title">Heritage guide</string>
+    <string name="guide_intro">Ask about this place. The guide answers from reviewed content only, and says when the record does not cover something.</string>
+    <string name="guide_hint">Ask about the history, the landmarks, the importance…</string>
+    <string name="guide_send">Ask</string>
+    <string name="guide_not_in_record">Not in the record</string>
+    <string name="guide_excerpts">Answered from</string>
+    <string name="guide_clear">Clear conversation</string>
+
+    <!-- Gallery -->
+    <string name="gallery_offline_placeholder">This photograph is hosted online and is not bundled. Connect to view it.</string>
+    <string name="gallery_view_source">View source and licence</string>
+    <string name="gallery_then_and_now">Then and now</string>
+    <string name="gallery_then_and_now_hint">Drag to compare</string>
+    <string name="gallery_no_pair">No historical photograph of this same subject has been added yet, so no comparison is offered.</string>
+    <string name="gallery_bundled">Bundled offline</string>
+
+    <!-- Quiz -->
+    <string name="quiz_progress">%1$d of %2$d answered</string>
+    <string name="quiz_correct_count">%1$d right</string>
+    <string name="quiz_restart">Start again</string>
+    <string name="quiz_score">%1$d out of %2$d</string>
+    <string name="quiz_perfect">You have %1$s down.</string>
+    <string name="quiz_keep_reading">The answers above each say where to read more.</string>
+    <string name="quiz_source">Source</string>
+    <string name="quiz_empty">No questions have been written for this location yet.</string>
+
+    <!-- Memories / contribute -->
+    <string name="memories_title">Memories people shared</string>
+    <string name="memories_empty">No approved memory has been added for this place yet. Yours could be the first.</string>
+    <string name="memories_reveal">Reveal this memory</string>
+    <string name="contribute_title">Share a Jerusalem memory</string>
+    <string name="contribute_intro">Every submission is read by an editor before it appears. Keep your reference code and you can check on it any time.</string>
+    <string name="contribute_place">Which place is it about?</string>
+    <string name="contribute_headline">Give it a title</string>
+    <string name="contribute_body">The memory</string>
+    <string name="contribute_body_hint">What you remember — a sound, a smell, a person, a street.</string>
+    <string name="contribute_name">Your name (optional)</string>
+    <string name="contribute_email">Email (optional, only for the review reply)</string>
+    <string name="contribute_submit">Send for review</string>
+    <string name="contribute_min_length">Please write at least 20 characters so a reviewer has something to read.</string>
+    <string name="contribute_accepted">Thank you — your memory is in the review queue.</string>
+    <string name="contribute_reference">Your reference code</string>
+    <string name="contribute_queued_title">Saved on this device</string>
+    <string name="contribute_queued_body">There is no connection to the review queue right now, so your memory is stored here and will be sent automatically. Nothing has been published.</string>
+    <string name="contribute_rejected">Not accepted: %1$s</string>
+    <string name="contribute_status_title">Check a submission</string>
+    <string name="contribute_status_hint">Reference code, e.g. HQ-KAAK26</string>
+    <string name="contribute_status_lookup">Check status</string>
+    <string name="contribute_status_unknown">That code is not in the review queue.</string>
+    <plurals name="contribute_queue_pending">
+        <item quantity="one">%1$d memory waiting to be sent</item>
+        <item quantity="other">%1$d memories waiting to be sent</item>
+    </plurals>
+
+    <!-- Map -->
+    <string name="map_title">The Old City and its neighbourhoods</string>
+    <string name="map_legend">Legend</string>
+    <string name="map_filter_all">All</string>
+    <string name="map_reset_view">Reset view</string>
+    <string name="map_labels_on">Hide names</string>
+    <string name="map_labels_off">Show names</string>
+    <string name="map_route_shown">Your planned route is drawn on the map.</string>
+    <string name="map_nearby_title">Are you nearby?</string>
+    <string name="map_nearby_body">If you are close to one of these places, Hikayat AlQuds can set up a walking narration. Your position is checked on the device and never sent anywhere.</string>
+    <string name="map_nearby_check">Check my location</string>
+    <string name="map_nearby_checking">Checking…</string>
+    <string name="map_nearby_result">You are about %1$s from %2$s.</string>
+    <string name="map_nearby_far">The nearest place in the archive is %1$s, about %2$d km away — too far to walk today. You can still read it from where you are.</string>
+    <string name="map_nearby_denied">Location access was declined. That is fine — the map works just as well.</string>
+    <string name="map_nearby_unavailable">Your location could not be determined.</string>
+    <string name="map_start_narration">Start the walking narration</string>
+    <string name="map_zoom_in">Zoom in</string>
+    <string name="map_zoom_out">Zoom out</string>
+
+    <!-- Plan tour -->
+    <string name="plan_title">Design your smart Jerusalem tour</string>
+    <string name="plan_intro">Three steps to a personal route, usable offline, built on reviewed content.</string>
+    <string name="plan_step_language">1. Choose the tour language</string>
+    <string name="plan_step_duration">2. How much time do you have?</string>
+    <string name="plan_step_interests">3. What interests you? (choose more than one)</string>
+    <string name="plan_summary">The guide will choose up to %1$d Jerusalem stops, order them to reduce backtracking, and show the estimated walking time and the route on the map.</string>
+    <string name="plan_build">Build route</string>
+    <string name="plan_route_title">Your route</string>
+    <string name="plan_total">%1$d stops · %2$d min total · %3$d min walking</string>
+    <string name="plan_day">Day %1$d</string>
+    <string name="plan_stop_time">%1$d min here</string>
+    <string name="plan_walk_leg">Walk %1$s %2$s</string>
+    <string name="plan_clear">Discard this route</string>
+    <string name="plan_duration_express">Express · 1–2 hours</string>
+    <string name="plan_duration_half_day">Half day · 4 hours</string>
+    <string name="plan_duration_full_day">Full day · 8 hours</string>
+    <string name="plan_duration_weekend">In-depth weekend · 2 days</string>
+    <string name="interest_history">History &amp; civilizations</string>
+    <string name="interest_architecture">Jerusalem architecture</string>
+    <string name="interest_religious">Sacred sites &amp; worship</string>
+    <string name="interest_food_markets">Souqs &amp; Jerusalem food</string>
+    <string name="interest_oral_heritage">People\'s stories &amp; oral memory</string>
+
+    <!-- Connections -->
+    <string name="connections_title">The archive as a web</string>
+    <string name="connections_intro">Places sit on the outer ring, the themes they share in the middle, and every published memory hangs off the place it belongs to. The lines are real relationships in the data, so where the picture is thin, the archive is thin.</string>
+    <string name="connections_memory">Memory</string>
+    <string name="connections_theme">Theme</string>
+    <string name="connections_open_place">Open this place</string>
+
+    <!-- Narration -->
+    <string name="narration_listen">Listen</string>
+    <string name="narration_pause">Pause</string>
+    <string name="narration_resume">Resume</string>
+    <string name="narration_stop">Stop</string>
+    <string name="narration_speed">Reading speed</string>
+    <string name="narration_voice">Voice</string>
+    <string name="narration_voice_device">Device voices, best first</string>
+    <string name="narration_no_voice">No %1$s voice is installed on this device, so nothing would be intelligible. Install one in the system speech settings.</string>
+    <string name="narration_language_data">The speech data for this language needs downloading in the system speech settings.</string>
+    <string name="narration_no_engine">This device has no speech engine, so narration is unavailable.</string>
+    <string name="narration_failed">The speech engine stopped unexpectedly.</string>
+    <string name="narration_open_settings">Open speech settings</string>
+    <string name="narration_progress">Sentence %1$d of %2$d</string>
+
+    <!-- Keepsake -->
+    <string name="keepsake_title">My Jerusalem Story</string>
+    <string name="keepsake_subtitle">Your digital tour keepsake</string>
+    <string name="keepsake_places">Places explored</string>
+    <string name="keepsake_places_empty">Open a place to add it to your story.</string>
+    <string name="keepsake_sites">Sites discovered</string>
+    <string name="keepsake_walking">Walking min</string>
+    <string name="keepsake_quizzes">Quizzes</string>
+    <string name="keepsake_narrations">Narrations</string>
+    <string name="keepsake_memories">Memories</string>
+    <string name="keepsake_quarters">Quarters</string>
+    <string name="keepsake_disclaimer">This reflection is generated only from your own progress; it adds no historical claim.</string>
+    <string name="keepsake_share">Share</string>
+    <string name="keepsake_save">Save a copy</string>
+    <string name="keepsake_saved">Keepsake saved to %1$s</string>
+
+    <!-- Search -->
+    <string name="search_hint">Search places, stories, landmarks</string>
+    <string name="search_empty">Nothing in the archive matches that. Try a place name, a landmark, or a period.</string>
+    <string name="search_result_place">Place</string>
+    <string name="search_result_story">Story</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_language">Interface language</string>
+    <string name="settings_language_arabic">العربية</string>
+    <string name="settings_language_english">English</string>
+    <string name="settings_appearance">Appearance</string>
+    <string name="settings_theme_system">Follow the system</string>
+    <string name="settings_theme_light">Light</string>
+    <string name="settings_theme_dark">Dark</string>
+    <string name="settings_data">Data and connection</string>
+    <string name="settings_api_url">Hikayat AlQuds API address</string>
+    <string name="settings_api_url_hint">http://10.0.2.2:3000/api/v1</string>
+    <string name="settings_api_url_help">Optional. Leave empty to use only the archive bundled in the app. On the Android emulator, 10.0.2.2 is your computer\'s localhost.</string>
+    <string name="settings_api_url_invalid">That is not a usable http or https address.</string>
+    <string name="settings_api_check">Test connection</string>
+    <string name="settings_api_ok">Connected — data source: %1$s</string>
+    <string name="settings_api_failed">Could not reach it: %1$s</string>
+    <string name="settings_sync_now">Refresh the archive</string>
+    <string name="settings_remote_images">Load photographs that are not bundled</string>
+    <string name="settings_remote_images_help">34 of the 64 photographs ship inside the app. The rest are hosted on Wikimedia Commons and need a connection.</string>
+    <string name="settings_narration">Narration</string>
+    <string name="settings_notifications">Notifications</string>
+    <string name="settings_daily_story">A daily story reminder</string>
+    <string name="settings_daily_story_help">One notification each morning with the story of the day. Off by default.</string>
+    <string name="settings_privacy">Your data</string>
+    <string name="settings_privacy_help">There are no accounts. Which places you opened, which quizzes you finished and which narrations you heard are kept on this device only and are never sent anywhere.</string>
+    <string name="settings_reset_journey">Forget my journey</string>
+    <string name="settings_reset_journey_confirm">This clears the places you opened, your saved places, quiz results and your planned route. Your settings stay. This cannot be undone.</string>
+    <string name="settings_clear_generated">Clear generated stories</string>
+    <string name="settings_reseed">Reinstall the bundled archive</string>
+    <string name="settings_about_app">Version %1$s (%2$d)</string>
+
+    <!-- About -->
+    <string name="about_title">About Hikayat AlQuds</string>
+    <string name="about_rule_title">The rule that shapes this app</string>
+    <string name="about_rule_body">The generator never invents a historical fact. It simplifies, rearranges and summarises reviewed content, and nothing else. Where the records do not cover something, the app says so rather than filling the gap.</string>
+    <string name="about_offline_title">Works with no connection</string>
+    <string name="about_offline_body">The complete reviewed archive — every place, story, timeline, quiz and 34 photographs — ships inside the app and is read from the device. A connection adds newly contributed memories and server-side story generation; it is never needed to read.</string>
+    <string name="about_photographs_title">Photographs</string>
+    <string name="about_photographs_body">Every photograph is a real picture of the actual place, shown with its photographer and licence. A then-and-now comparison is only offered where the archive holds two photographs of the same subject.</string>
+    <string name="about_team">Team</string>
+    <string name="about_licences">Open-source licences</string>
+
+    <!-- Empty and error states -->
+    <string name="error_generic">Something went wrong.</string>
+    <string name="error_location_missing">That place is not in the archive.</string>
+    <string name="loading">Loading…</string>
+    <string name="empty_timeline">No timeline has been written for this place yet.</string>
+    <string name="empty_gallery">No photographs have been added for this place yet.</string>
+    <string name="empty_artisans">No artisans or markets have been recorded for this place yet.</string>
+
+    <!-- Accessibility -->
+    <string name="cd_cover_photo">Photograph of %1$s</string>
+    <string name="cd_map_pin">%1$s, on the map</string>
+    <string name="cd_selected">selected</string>
+    <string name="cd_earned_badge">Badge earned: %1$s</string>
+    <string name="cd_locked_badge">Badge not yet earned: %1$s</string>
+    <string name="cd_comparison_slider">Comparison slider position</string>
+</resources>

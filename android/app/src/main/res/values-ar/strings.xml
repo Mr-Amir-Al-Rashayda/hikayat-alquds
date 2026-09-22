@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  نصوص الواجهة العربية.
+
+  المحتوى المراجع - الحكايات والتسلسل الزمني وأسئلة الاختبار والذكريات - ليس
+  هنا؛ فهو محفوظ في الأرشيف بنصّه العربي والإنجليزي، وكلاهما مراجَع. هذا الملف
+  لواجهة التطبيق نفسها فقط.
+-->
+<resources>
+    <string name="app_name">حكاية القدس</string>
+    <string name="app_tagline">المرشد السياحي الرقمي الذكي للقدس</string>
+    <string name="brand_lockup">حكاية القدس · HIKAYAT ALQUDS</string>
+    <string name="track_badge">مسار Q GUIDE 2026</string>
+
+    <string name="nav_home">الرئيسية</string>
+    <string name="nav_map">الخريطة</string>
+    <string name="nav_plan">صمّم جولتك</string>
+    <string name="nav_connections">الروابط</string>
+    <string name="nav_contribute">شارك حكاية</string>
+    <string name="nav_about">عن المنصة</string>
+    <string name="nav_settings">الإعدادات</string>
+    <string name="nav_search">بحث</string>
+
+    <string name="home_greeting">القدس، مرويّة من سجلاتها</string>
+    <string name="home_intro">ثماني حارات وأبواب وأحياء، كلّها مبنية من محتوى مراجَع فقط. وحيث يكون في السجل فجوة، يقول هذا الدليل ذلك بدل أن يملأها.</string>
+    <string name="home_story_of_the_day">حكاية اليوم</string>
+    <string name="home_another_story">حكاية أخرى</string>
+    <string name="home_all_places">كل الأماكن</string>
+    <string name="home_continue">أكمل من حيث توقفت</string>
+    <string name="home_plan_cta">صمّم مسار مشيك</string>
+    <string name="home_keepsake_cta">إنشاء حكايتي في القدس</string>
+    <string name="home_progress_title">رحلتك</string>
+    <string name="home_progress_subtitle">فتحت %1$d من %2$d مكاناً</string>
+    <string name="home_bookmarks">أماكن محفوظة</string>
+
+    <string name="stat_stories">حكايات</string>
+    <string name="stat_photographs">صور</string>
+    <string name="stat_timeline">محطات زمنية</string>
+    <string name="stat_memories">ذكريات</string>
+    <string name="stat_reading_time">قراءة %1$d دقيقة</string>
+    <string name="label_visited">مفتوح</string>
+    <string name="action_save">احفظ</string>
+    <string name="action_unsave">محفوظ</string>
+    <string name="action_open_in_maps">اتجاهات المشي</string>
+    <string name="action_share">مشاركة</string>
+    <string name="action_close">إغلاق</string>
+    <string name="action_back">رجوع</string>
+    <string name="action_next">التالي</string>
+
+    <string name="tab_story">الحكاية</string>
+    <string name="tab_guide">الدليل</string>
+    <string name="tab_timeline">التسلسل الزمني</string>
+    <string name="tab_gallery">الصور</string>
+    <string name="tab_artisans">الحرفيون</string>
+    <string name="tab_quiz">اختبار</string>
+    <string name="tab_memories">الذكريات</string>
+
+    <string name="story_reviewed">الحكاية المراجعة</string>
+    <string name="story_generate_title">أعد رواية هذا المكان</string>
+    <string name="story_generate_step_audience">١. لمن هي؟</string>
+    <string name="story_generate_step_tone">٢. كيف تريد أن تكون؟</string>
+    <string name="story_generate_action">أنشئ</string>
+    <string name="story_regenerate">أنشئ مرة أخرى</string>
+    <string name="story_word_count">%1$d كلمة</string>
+    <string name="audience_student">طالب</string>
+    <string name="audience_tourist">زائر</string>
+    <string name="audience_child">طفل</string>
+    <string name="audience_short">دقيقتان</string>
+    <string name="audience_historian">مؤرخ</string>
+    <string name="audience_general">عام</string>
+    <string name="tone_neutral">محايدة</string>
+    <string name="tone_educational">تعليمية</string>
+    <string name="tone_emotional">تأملية</string>
+    <string name="tone_storytelling">سردية</string>
+
+    <string name="origin_label">كتبها</string>
+    <string name="origin_backend_ai">نموذج المحتوى المراجَع على الخادم</string>
+    <string name="origin_offline_extractive">المولّد الاستخراجي على الخادم</string>
+    <string name="origin_backend_fallback">وصف المكان المخزَّن على الخادم</string>
+    <string name="origin_on_device">هذا الجهاز، من سجل المكان المراجَع</string>
+    <string name="uncertainty_title">ما لا يدّعيه هذا النص</string>
+    <string name="sources_title">من أين يأتي هذا</string>
+    <string name="tradition_badge">تراث شفوي أو ديني</string>
+    <string name="tradition_note">مسجَّل كتراث ومنسوب بوصفه كذلك، لا كتاريخ موثَّق.</string>
+    <string name="banner_bundled_title">يُعرض الأرشيف كما شُحن مع التطبيق</string>
+    <string name="banner_bundled_body">هذا هو الأرشيف المراجَع كاملاً، مضمَّن داخل التطبيق. أما الذكريات المضافة حديثاً والحكايات المولّدة على الخادم فتحتاج اتصالاً.</string>
+    <string name="banner_live_title">متصل بواجهة حكاية القدس</string>
+    <string name="banner_live_body">آخر تحديث %1$s.</string>
+    <string name="banner_offline">لا يوجد اتصال — تُقرأ من الأرشيف المضمَّن.</string>
+
+    <string name="guide_title">الدليل التراثي</string>
+    <string name="guide_intro">اسأل عن هذا المكان. يجيب الدليل من المحتوى المراجَع فقط، ويقول لك متى لا يغطي السجل سؤالك.</string>
+    <string name="guide_hint">اسأل عن التاريخ أو المعالم أو الأهمية…</string>
+    <string name="guide_send">اسأل</string>
+    <string name="guide_not_in_record">غير موجود في السجل</string>
+    <string name="guide_excerpts">أُجيب من</string>
+    <string name="guide_clear">امسح المحادثة</string>
+
+    <string name="gallery_offline_placeholder">هذه الصورة مستضافة على الإنترنت وغير مضمَّنة. اتصل لعرضها.</string>
+    <string name="gallery_view_source">اعرض المصدر والترخيص</string>
+    <string name="gallery_then_and_now">أمس واليوم</string>
+    <string name="gallery_then_and_now_hint">اسحب للمقارنة</string>
+    <string name="gallery_no_pair">لم تُضف صورة تاريخية للموضوع نفسه بعد، لذلك لا تُعرض مقارنة.</string>
+    <string name="gallery_bundled">مضمَّنة دون اتصال</string>
+
+    <string name="quiz_progress">أجبت عن %1$d من %2$d</string>
+    <string name="quiz_correct_count">%1$d صحيحة</string>
+    <string name="quiz_restart">ابدأ من جديد</string>
+    <string name="quiz_score">%1$d من %2$d</string>
+    <string name="quiz_perfect">أصبحت تعرف %1$s جيداً.</string>
+    <string name="quiz_keep_reading">توضح كل إجابة أعلاه أين يمكنك قراءة المزيد.</string>
+    <string name="quiz_source">المصدر</string>
+    <string name="quiz_empty">لم تُكتب أسئلة لهذا المكان بعد.</string>
+
+    <string name="memories_title">ذكريات شاركها الناس</string>
+    <string name="memories_empty">لم تُضف ذكرى مُعتمدة لهذا المكان بعد. قد تكون ذكرياتك الأولى.</string>
+    <string name="memories_reveal">اكشف هذه الذكرى</string>
+    <string name="contribute_title">شارك ذكرى مقدسية</string>
+    <string name="contribute_intro">يقرأ محرِّرٌ كل مشاركة قبل ظهورها. احفظ رمزك المرجعي لتتابع حالتها في أي وقت.</string>
+    <string name="contribute_place">عن أي مكان؟</string>
+    <string name="contribute_headline">اكتب عنواناً</string>
+    <string name="contribute_body">الذكرى</string>
+    <string name="contribute_body_hint">ما تتذكره — صوت، أو رائحة، أو شخص، أو شارع.</string>
+    <string name="contribute_name">اسمك (اختياري)</string>
+    <string name="contribute_email">البريد الإلكتروني (اختياري، لردّ المراجعة فقط)</string>
+    <string name="contribute_submit">أرسل للمراجعة</string>
+    <string name="contribute_min_length">اكتب عشرين حرفاً على الأقل ليكون لدى المراجع ما يقرأه.</string>
+    <string name="contribute_accepted">شكراً — ذكرياتك في قائمة المراجعة.</string>
+    <string name="contribute_reference">رمزك المرجعي</string>
+    <string name="contribute_queued_title">محفوظة على هذا الجهاز</string>
+    <string name="contribute_queued_body">لا يوجد اتصال بقائمة المراجعة الآن، لذلك حُفظت ذكرياتك هنا وستُرسل تلقائياً. لم يُنشر شيء.</string>
+    <string name="contribute_rejected">لم تُقبل: %1$s</string>
+    <string name="contribute_status_title">تحقق من مشاركة</string>
+    <string name="contribute_status_hint">الرمز المرجعي، مثل HQ-KAAK26</string>
+    <string name="contribute_status_lookup">تحقق من الحالة</string>
+    <string name="contribute_status_unknown">هذا الرمز غير موجود في قائمة المراجعة.</string>
+    <plurals name="contribute_queue_pending">
+        <item quantity="zero">لا ذكريات تنتظر الإرسال</item>
+        <item quantity="one">ذكرى واحدة تنتظر الإرسال</item>
+        <item quantity="two">ذكريتان تنتظران الإرسال</item>
+        <item quantity="few">%1$d ذكريات تنتظر الإرسال</item>
+        <item quantity="many">%1$d ذكرى تنتظر الإرسال</item>
+        <item quantity="other">%1$d ذكرى تنتظر الإرسال</item>
+    </plurals>
+
+    <string name="map_title">البلدة القديمة وأحياؤها</string>
+    <string name="map_legend">المفتاح</string>
+    <string name="map_filter_all">الكل</string>
+    <string name="map_reset_view">أعد العرض</string>
+    <string name="map_labels_on">أخفِ الأسماء</string>
+    <string name="map_labels_off">أظهر الأسماء</string>
+    <string name="map_route_shown">مسارك المخطَّط مرسوم على الخريطة.</string>
+    <string name="map_nearby_title">هل أنت قريب؟</string>
+    <string name="map_nearby_body">إذا كنت قريباً من أحد هذه الأماكن، تجهّز لك حكاية القدس رواية مشي صوتية. يُفحص موقعك على الجهاز ولا يُرسل إلى أي مكان.</string>
+    <string name="map_nearby_check">تحقق من موقعي</string>
+    <string name="map_nearby_checking">جارٍ التحقق…</string>
+    <string name="map_nearby_result">أنت على بُعد %1$s من %2$s.</string>
+    <string name="map_nearby_far">أقرب مكان في الأرشيف هو %1$s، على بُعد نحو %2$d كم — وهو بعيد عن جولة مشي اليوم. يمكنك قراءة حكايته من مكانك.</string>
+    <string name="map_nearby_denied">رُفض إذن الوصول إلى الموقع، ولا مشكلة؛ الخريطة تعمل تماماً.</string>
+    <string name="map_nearby_unavailable">تعذّر تحديد موقعك.</string>
+    <string name="map_start_narration">ابدأ رواية المشي</string>
+    <string name="map_zoom_in">تكبير</string>
+    <string name="map_zoom_out">تصغير</string>
+
+    <string name="plan_title">صمّم جولتك الذكية في القدس</string>
+    <string name="plan_intro">ثلاث خطوات لمسار شخصي، قابل للاستخدام دون اتصال، ومبني على محتوى مراجَع.</string>
+    <string name="plan_step_language">١. اختر لغة الجولة</string>
+    <string name="plan_step_duration">٢. كم من الوقت لديك؟</string>
+    <string name="plan_step_interests">٣. ما الذي يهمك؟ (اختر أكثر من خيار)</string>
+    <string name="plan_summary">سيختار الدليل حتى %1$d محطات في القدس، ويرتّبها لتقليل الرجوع، ويعرض وقت المشي التقريبي والمسار على الخريطة.</string>
+    <string name="plan_build">أنشئ المسار</string>
+    <string name="plan_route_title">مسارك</string>
+    <string name="plan_total">%1$d محطات · %2$d دقيقة إجمالاً · %3$d دقيقة مشياً</string>
+    <string name="plan_day">اليوم %1$d</string>
+    <string name="plan_stop_time">%1$d دقيقة هنا</string>
+    <string name="plan_walk_leg">امشِ %1$s %2$s</string>
+    <string name="plan_clear">اصرف هذا المسار</string>
+    <string name="plan_duration_express">سريعة · ١–٢ ساعة</string>
+    <string name="plan_duration_half_day">نصف يوم · ٤ ساعات</string>
+    <string name="plan_duration_full_day">يوم كامل · ٨ ساعات</string>
+    <string name="plan_duration_weekend">نهاية أسبوع معمّقة · يومان</string>
+    <string name="interest_history">تاريخ وحضارات</string>
+    <string name="interest_architecture">عمارة القدس</string>
+    <string name="interest_religious">مقدسات وأماكن عبادة</string>
+    <string name="interest_food_markets">أسواق ومأكولات مقدسية</string>
+    <string name="interest_oral_heritage">حكايات الناس والذاكرة الشفوية</string>
+
+    <string name="connections_title">الأرشيف كشبكة</string>
+    <string name="connections_intro">تجلس الأماكن على الحلقة الخارجية، والمواضيع المشتركة في الوسط، وتتعلّق كل ذكرى منشورة بالمكان الذي تنتمي إليه. الخطوط علاقات حقيقية في البيانات، فحيث تبدو الصورة خفيفة يكون الأرشيف خفيفاً.</string>
+    <string name="connections_memory">ذكرى</string>
+    <string name="connections_theme">موضوع</string>
+    <string name="connections_open_place">افتح هذا المكان</string>
+
+    <string name="narration_listen">استمع</string>
+    <string name="narration_pause">إيقاف مؤقت</string>
+    <string name="narration_resume">أكمل</string>
+    <string name="narration_stop">إيقاف</string>
+    <string name="narration_speed">سرعة القراءة</string>
+    <string name="narration_voice">الصوت</string>
+    <string name="narration_voice_device">أصوات الجهاز، الأفضل أولاً</string>
+    <string name="narration_no_voice">لا يوجد صوت %1$s مثبَّت على هذا الجهاز، ولن تكون القراءة مفهومة. ثبّت صوتاً من إعدادات النطق في النظام.</string>
+    <string name="narration_language_data">تحتاج بيانات النطق لهذه اللغة إلى تنزيل من إعدادات النطق في النظام.</string>
+    <string name="narration_no_engine">لا يوجد محرّك نطق على هذا الجهاز، لذلك الرواية الصوتية غير متاحة.</string>
+    <string name="narration_failed">توقّف محرّك النطق بشكل غير متوقع.</string>
+    <string name="narration_open_settings">افتح إعدادات النطق</string>
+    <string name="narration_progress">الجملة %1$d من %2$d</string>
+
+    <string name="keepsake_title">حكايتي في القدس</string>
+    <string name="keepsake_subtitle">تذكار جولتك الرقمية</string>
+    <string name="keepsake_places">الأماكن التي استكشفتها</string>
+    <string name="keepsake_places_empty">افتح صفحة مكان ليُضاف إلى حكايتك.</string>
+    <string name="keepsake_sites">مواقع مكتشفة</string>
+    <string name="keepsake_walking">دقائق مشي</string>
+    <string name="keepsake_quizzes">اختبارات</string>
+    <string name="keepsake_narrations">روايات مسموعة</string>
+    <string name="keepsake_memories">ذكريات</string>
+    <string name="keepsake_quarters">حارات</string>
+    <string name="keepsake_disclaimer">هذا الانعكاس مولَّد من تقدّمك وحده؛ لا يضيف أي ادعاء تاريخي.</string>
+    <string name="keepsake_share">مشاركة</string>
+    <string name="keepsake_save">احفظ نسخة</string>
+    <string name="keepsake_saved">حُفظ التذكار في %1$s</string>
+
+    <string name="search_hint">ابحث في الأماكن والحكايات والمعالم</string>
+    <string name="search_empty">لا يطابق ذلك شيئاً في الأرشيف. جرّب اسم مكان أو معلماً أو حقبة.</string>
+    <string name="search_result_place">مكان</string>
+    <string name="search_result_story">حكاية</string>
+
+    <string name="settings_title">الإعدادات</string>
+    <string name="settings_language">لغة الواجهة</string>
+    <string name="settings_language_arabic">العربية</string>
+    <string name="settings_language_english">English</string>
+    <string name="settings_appearance">المظهر</string>
+    <string name="settings_theme_system">اتبع النظام</string>
+    <string name="settings_theme_light">فاتح</string>
+    <string name="settings_theme_dark">داكن</string>
+    <string name="settings_data">البيانات والاتصال</string>
+    <string name="settings_api_url">عنوان واجهة حكاية القدس</string>
+    <string name="settings_api_url_hint">http://10.0.2.2:3000/api/v1</string>
+    <string name="settings_api_url_help">اختياري. اتركه فارغاً لاستخدام الأرشيف المضمَّن في التطبيق فقط. وعلى محاكي أندرويد، العنوان 10.0.2.2 هو localhost في حاسبك.</string>
+    <string name="settings_api_url_invalid">هذا ليس عنوان http أو https صالحاً.</string>
+    <string name="settings_api_check">اختبر الاتصال</string>
+    <string name="settings_api_ok">متصل — مصدر البيانات: %1$s</string>
+    <string name="settings_api_failed">تعذّر الوصول: %1$s</string>
+    <string name="settings_sync_now">حدّث الأرشيف</string>
+    <string name="settings_remote_images">حمّل الصور غير المضمَّنة</string>
+    <string name="settings_remote_images_help">٣٤ من ٦٤ صورة تُشحن داخل التطبيق. والبقية مستضافة على ويكيميديا كومنز وتحتاج اتصالاً.</string>
+    <string name="settings_narration">الرواية الصوتية</string>
+    <string name="settings_notifications">التنبيهات</string>
+    <string name="settings_daily_story">تذكير يومي بحكاية</string>
+    <string name="settings_daily_story_help">تنبيه واحد كل صباح بحكاية اليوم. معطَّل افتراضياً.</string>
+    <string name="settings_privacy">بياناتك</string>
+    <string name="settings_privacy_help">لا توجد حسابات. الأماكن التي فتحتها والاختبارات التي أكملتها والروايات التي سمعتها محفوظة على هذا الجهاز وحده ولا تُرسل إلى أي مكان.</string>
+    <string name="settings_reset_journey">انسَ رحلتي</string>
+    <string name="settings_reset_journey_confirm">سيؤدي هذا إلى مسح الأماكن التي فتحتها وأماكنك المحفوظة ونتائج الاختبارات ومسارك المخطَّط. إعداداتك تبقى. لا يمكن التراجع.</string>
+    <string name="settings_clear_generated">امسح الحكايات المولّدة</string>
+    <string name="settings_reseed">أعد تثبيت الأرشيف المضمَّن</string>
+    <string name="settings_about_app">الإصدار %1$s (%2$d)</string>
+
+    <string name="about_title">عن حكاية القدس</string>
+    <string name="about_rule_title">القاعدة التي تصوغ هذا التطبيق</string>
+    <string name="about_rule_body">لا يخترع المولّد حقيقة تاريخية. إنه يبسّط ويعيد ترتيب ويلخّص المحتوى المراجَع، ولا شيء غير ذلك. وحيث لا تغطي السجلات شيئاً، يقول التطبيق ذلك بدل أن يملأ الفجوة.</string>
+    <string name="about_offline_title">يعمل دون اتصال</string>
+    <string name="about_offline_body">الأرشيف المراجَع كامل — كل مكان وحكاية وتسلسل زمني واختبار و٣٤ صورة — يُشحن داخل التطبيق ويُقرأ من الجهاز. الاتصال يضيف الذكريات المضافة حديثاً وتوليد الحكايات على الخادم؛ ولا يُحتاج إليه للقراءة أبداً.</string>
+    <string name="about_photographs_title">الصور</string>
+    <string name="about_photographs_body">كل صورة هي صورة حقيقية للمكان نفسه، معروضة مع مصوّرها وترخيصها. ولا تُعرض مقارنة «أمس واليوم» إلا حيث يحفظ الأرشيف صورتين للموضوع نفسه.</string>
+    <string name="about_team">الفريق</string>
+    <string name="about_licences">تراخيص المصادر المفتوحة</string>
+
+    <string name="error_generic">حدث خطأ ما.</string>
+    <string name="error_location_missing">هذا المكان غير موجود في الأرشيف.</string>
+    <string name="loading">جارٍ التحميل…</string>
+    <string name="empty_timeline">لم يُكتب تسلسل زمني لهذا المكان بعد.</string>
+    <string name="empty_gallery">لم تُضف صور لهذا المكان بعد.</string>
+    <string name="empty_artisans">لم تُسجَّل حرف أو أسواق لهذا المكان بعد.</string>
+
+    <string name="cd_cover_photo">صورة %1$s</string>
+    <string name="cd_map_pin">%1$s، على الخريطة</string>
+    <string name="cd_selected">محدَّد</string>
+    <string name="cd_earned_badge">شارة محقَّقة: %1$s</string>
+    <string name="cd_locked_badge">شارة لم تُحقَّق بعد: %1$s</string>
+    <string name="cd_comparison_slider">موضع شريط المقارنة</string>
+</resources>

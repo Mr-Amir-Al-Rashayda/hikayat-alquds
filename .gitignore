@@ -24,3 +24,6 @@ __pycache__/
 .idea/
 .vscode/
 *.zip
+
+# Built APKs, produced by android/gradlew
+/dist/

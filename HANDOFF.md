@@ -1,6 +1,6 @@
 # Hikayat AlQuds — Team Handoff
 
-This archive contains the full editable project source: React frontend, NestJS backend, Python AI service, reviewed Jerusalem content, database seeds, documentation, public media and the official Hikayat AlQuds logo assets.
+This archive contains the full editable project source: React frontend, native Android app, NestJS backend, Python AI service, reviewed Jerusalem content, database seeds, documentation, public media and the official Hikayat AlQuds logo assets.
 
 ## What is intentionally not included
 
@@ -29,6 +29,13 @@ npm run start:dev
 ```
 
 ```bash
+# Android app (needs JDK 17 and Android SDK 36)
+cd android
+echo "sdk.dir=/path/to/Android/Sdk" > local.properties
+./gradlew installDebug
+```
+
+```bash
 # AI service
 cd ai
 python3 -m venv .venv
@@ -45,4 +52,9 @@ The frontend has an offline/mock fallback, so it still runs if the backend or AI
 cd frontend
 npm run lint
 npm run build
+```
+
+```bash
+cd android
+./gradlew testDebugUnitTest lintDebug assembleDebug
 ```
