@@ -85,7 +85,15 @@ interface LegacyContribution {
 // NestJS moderation API and its offline Jerusalem-only repository.
 const userContributions: LegacyContribution[] = [];
 
-// Lazy Gemini client helper
+// Lazy Gemini client helper.
+//
+// As of the 2026 key rotation, "Get API key" in AI Studio issues Vertex AI
+// Express-mode keys (prefixed "AQ.") instead of the old Developer API keys
+// (prefixed "AIza"). Express keys only authenticate against Vertex AI
+// (vertexai: true) - sent to the classic Developer API host they come back
+// as a 401 ACCESS_TOKEN_TYPE_UNSUPPORTED, as if no credential was sent at
+// all. `vertexai: true` needs no project/location in Express mode; the SDK
+// still takes the same model names and call shapes either way.
 let aiInstance: GoogleGenAI | null = null;
 function getAI() {
   const apiKey = process.env.GEMINI_API_KEY;
@@ -95,6 +103,7 @@ function getAI() {
   if (!aiInstance) {
     aiInstance = new GoogleGenAI({
       apiKey,
+      vertexai: true,
       httpOptions: {
         headers: {
           "User-Agent": "aistudio-build",
