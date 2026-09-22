@@ -417,7 +417,6 @@ function generateNaturalTts(
   text: string,
   selectedVoice: string,
   key: string,
-  onAudioChunk?: (pcm: Buffer, sampleRate: number) => void,
 ) {
   const existing = ttsInFlight.get(key);
   if (existing) return existing;
@@ -425,7 +424,14 @@ function generateNaturalTts(
   const task = (async (): Promise<TtsPayload> => {
     const ai = getAI();
     const direction = naturalTtsDirection(text);
-    const responseStream = await ai.models.generateContentStream({
+    // Vertex AI Express-mode keys (the "AQ." keys AI Studio now issues,
+    // required since the 2026 key rotation) authenticate fine against
+    // generateContent but are rejected on generateContentStream with a
+    // misleading "expected OAuth" 401 - a known gap in that method, not an
+    // invalid-key problem. The code below already buffers the full response
+    // before returning anything, so calling the non-streaming method costs
+    // nothing here.
+    const response = await ai.models.generateContent({
       model: "gemini-3.1-flash-tts-preview",
       contents: [{ parts: [{ text: `${direction}\n\n${text}` }] }],
       config: {
@@ -441,17 +447,16 @@ function generateNaturalTts(
     const pcmChunks: Buffer[] = [];
     let sampleRate = 24000;
     let sourceMime = "audio/L16;rate=24000";
-    for await (const responseChunk of responseStream) {
-      const audioPart = responseChunk.candidates?.[0]?.content?.parts?.find(
-        (part) => Boolean(part.inlineData?.data),
-      )?.inlineData;
-      if (!audioPart?.data) continue;
+    const audioParts = response.candidates?.[0]?.content?.parts?.filter(
+      (part) => Boolean(part.inlineData?.data),
+    ) ?? [];
+    for (const part of audioParts) {
+      const audioPart = part.inlineData!;
       sourceMime = audioPart.mimeType || sourceMime;
       sampleRate = Number(sourceMime.match(/rate=(\d+)/i)?.[1] ?? sampleRate);
-      const pcm = Buffer.from(audioPart.data, "base64");
+      const pcm = Buffer.from(audioPart.data!, "base64");
       if (pcm.length === 0) continue;
       pcmChunks.push(pcm);
-      onAudioChunk?.(pcm, sampleRate);
     }
 
     if (pcmChunks.length === 0) throw new Error("Failed to generate TTS audio stream.");
